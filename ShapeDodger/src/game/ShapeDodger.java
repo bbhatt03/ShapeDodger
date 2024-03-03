@@ -61,39 +61,25 @@ class ShapeDodger extends Game {
         brush.drawString("Deadly Obstacle: INSTANT GAME OVER", 700, 20);
         
         brush.setColor(Color.GREEN);
-        brush.drawString("Poison Obstacle: -5 HEALTH", 700, 35);
+        brush.drawString("Poison Obstacle: -5 HEALTH PER SECOND", 700, 35);
 
         if (!gameOver) {
             player.move();
 
             //Lambda Expression
-            Arrays.stream(obstacles)
-            .forEach(obstacle -> {
+            Arrays.stream(obstacles).forEach(obstacle -> {
                 obstacle.paint(brush);
                 if (player.collides(obstacle)) {
                     if (obstacle.isBig()) {
                         gameOver = true; // Game over if player hits a big obstacle
                     } else {
-                        player.reduceHealth(5); // Reduce player's health if hits a small obstacle
+                        player.reduceHealth(1); // Reduce player's health if hits a small obstacle
                         if (player.getHealth() <= 0) {
                             gameOver = true; // Game over if player's health reaches 0
                         }
                     }
                 }
             });
-//            for (Obstacle obstacle : obstacles) {
-//                obstacle.paint(brush);
-//                if (player.collides(obstacle)) {
-//                    if (obstacle.isBig()) {
-//                        gameOver = true; // Game over if player hits a big obstacle
-//                    } else {
-//                        player.reduceHealth(5); // Reduce player's health if hits a small obstacle
-//                        if (player.getHealth() <= 0) {
-//                            gameOver = true; // Game over if player's health reaches 0
-//                        }
-//                    }
-//                }
-//            }
             player.paint(brush);
         } else {
             brush.setColor(Color.WHITE);
