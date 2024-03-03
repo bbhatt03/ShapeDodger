@@ -3,7 +3,11 @@ package game;
 import java.awt.*;
 import java.awt.event.*;
 
-// Element representing the player-controlled shape
+/**
+ * The PlayerShape class represents the player-controlled shape in the game.
+ * It extends the Polygon class to define the shape of the player's character.
+ * This class handles movement, collision detection, and health management of the player.
+ */
 class PlayerShape extends Polygon {
     private boolean forwardPressed = false;
     private boolean leftPressed = false;
@@ -19,13 +23,20 @@ class PlayerShape extends Polygon {
             new Point(BASE_WIDTH / 2, HEIGHT)  // Bottom-right corner
     };
 
-
-
+    /**
+     * Constructs a PlayerShape object with default parameters.
+     * The initial position is set to the center bottom of the screen,
+     * and the initial rotation is set to 90 degrees (facing upwards).
+     */
     public PlayerShape() {
         super(playerShapePoints, new Point(400, 500), 90); 
-        // Starting position (center bottom of the screen)
     }
     
+    /**
+     * Moves the player shape based on the current input.
+     * If forward is pressed, moves the player forward in the direction they are facing.
+     * If left or right is pressed, rotates the player left or right.
+     */
     public void move() {
         if (forwardPressed) {
             double deltaX = stepSize * Math.sin(Math.toRadians(rotation));
@@ -41,27 +52,51 @@ class PlayerShape extends Polygon {
         }
     }
 
-
+    /**
+     * Sets the forward movement state of the player.
+     * @param value true if forward movement is enabled, false otherwise
+     */
     public void setForwardPressed(boolean value) {
         forwardPressed = value;
     }
 
+    /**
+     * Sets the left movement state of the player.
+     * @param value true if left movement is enabled, false otherwise
+     */
     public void setLeftPressed(boolean value) {
         leftPressed = value;
     }
 
+    /**
+     * Sets the right movement state of the player.
+     * @param value true if right movement is enabled, false otherwise
+     */
     public void setRightPressed(boolean value) {
         rightPressed = value;
     }
 
+    /**
+     * Reduces the health of the player by the specified amount.
+     * @param points the amount of health points to reduce
+     */
     public void reduceHealth(int points) {
         health -= points;
     }
 
+    /**
+     * Gets the current health of the player.
+     * @return the current health value
+     */
     public int getHealth() {
         return health;
     }
 
+    /**
+     * Paints the player shape on the graphics context.
+     * The player shape is filled with blue color, and the health is displayed as text.
+     * @param brush the graphics context to paint on
+     */
     public void paint(Graphics brush) {
         brush.setColor(Color.BLUE);
         Point[] points = getPoints();
@@ -76,6 +111,11 @@ class PlayerShape extends Polygon {
         brush.drawString("Health: " + health, 10, 20); // Display health counter
     }
 
+    /**
+     * Checks whether the player shape collides with the specified polygon.
+     * @param other the polygon to check for collision with
+     * @return true if the player shape collides with the specified polygon, false otherwise
+     */
     public boolean collides(Polygon other) {
         // We'll implement collision detection logic here
         Point[] points = getPoints();
@@ -87,7 +127,9 @@ class PlayerShape extends Polygon {
         return false;
     }
     
-    // Inner class for handling key events
+    /**
+     * Inner class for handling key events related to player movement.
+     */
     class KeyHandler extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
