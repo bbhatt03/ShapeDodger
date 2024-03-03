@@ -1,9 +1,13 @@
 package game;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.Arrays;
 
+/**
+ * The ShapeDodger class represents the main game control and rendering logic for the Shape Dodger game.
+ * It extends the Game class and handles player movement, obstacle creation, collision detection,
+ * and game-over conditions.
+ */
 class ShapeDodger extends Game {
     private PlayerShape player;
     private Obstacle[] obstacles;
@@ -11,6 +15,9 @@ class ShapeDodger extends Game {
     private ScoreTracker scoreTracker;
     private static final int BIG_OBSTACLE_SIZE = 50;
 
+    /**
+     * Constructs a new instance of ShapeDodger with default dimensions and initializes the game elements.
+     */
     public ShapeDodger() {
         super("Shape Dodger", 1000, 800);
         player = new PlayerShape();
@@ -53,13 +60,18 @@ class ShapeDodger extends Game {
         this.requestFocus();
     }
 
+    /**
+     * Paints the game elements on the screen.
+     *
+     * @param brush the graphics context on which to paint
+     */
     public void paint(Graphics brush) {
         brush.setColor(Color.BLACK);
         brush.fillRect(0, 0, width, height);
-        
+
         brush.setColor(Color.RED);
         brush.drawString("Deadly Obstacle: INSTANT GAME OVER", 700, 20);
-        
+
         brush.setColor(Color.GREEN);
         brush.drawString("Poison Obstacle: -5 HEALTH PER SECOND", 700, 35);
 
@@ -67,7 +79,8 @@ class ShapeDodger extends Game {
             player.move();
 
             //Lambda Expression
-            Arrays.stream(obstacles).forEach(obstacle -> {
+            Arrays.stream(obstacles).forEach(obstacle -> {// Creates an instance
+                //of the anonymous inner class
                 obstacle.paint(brush);
                 if (player.collides(obstacle)) {
                     if (obstacle.isBig()) {
@@ -87,24 +100,56 @@ class ShapeDodger extends Game {
         }
     }
 
-    // Inner class declaration
+    /**
+     * The main method to start the game.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        ShapeDodger game = new ShapeDodger();
+        game.repaint();
+    }
+
+    /**
+     * The Obstacle class represents the obstacles in the game.
+     * It extends the Polygon class and is used to draw and manage obstacles.
+     */
     class Obstacle extends Polygon {
         private final boolean isBig;
 
+        /**
+         * Constructs a new Obstacle instance with the specified parameters.
+         *
+         * @param inShape    the shape of the obstacle
+         * @param inPosition the position of the obstacle
+         * @param inRotation the rotation angle of the obstacle
+         * @param isBig      true if the obstacle is big, false otherwise
+         */
         public Obstacle(Point[] inShape, Point inPosition, double inRotation, boolean isBig) {
             super(inShape, inPosition, inRotation);
             this.isBig = isBig;
         }
 
+        /**
+         * Checks if the obstacle is big.
+         *
+         * @return true if the obstacle is big, false otherwise
+         */
         public boolean isBig() {
             return isBig;
         }
 
+        /**
+         * Paints the obstacle on the graphics context.
+         *
+         * @param brush the graphics context on which to paint
+         */
         public void paint(Graphics brush) {
-            if (isBig)
+            if (isBig) {
                 brush.setColor(Color.red);
-            else
+            } else {
                 brush.setColor(Color.green);
+            }
             Point[] points = getPoints();
             int[] xPoints = new int[points.length];
             int[] yPoints = new int[points.length];
@@ -114,10 +159,5 @@ class ShapeDodger extends Game {
             }
             brush.fillPolygon(xPoints, yPoints, points.length);
         }
-    }
-    
-    public static void main(String[] args) {
-        ShapeDodger game = new ShapeDodger();
-        game.repaint();
     }
 }
