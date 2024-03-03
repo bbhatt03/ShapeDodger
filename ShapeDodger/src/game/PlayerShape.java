@@ -11,25 +11,27 @@ class PlayerShape extends Polygon {
     private final double stepSize = 5.0;
     private int health = 100; // Initial health value
 
-    private static final int SIZE = 20; // Size of the square
+    private static final int BASE_WIDTH = 20; // Width of the base of the triangle
+    private static final int HEIGHT = 30; // Height of the triangle
     private static final Point[] playerShapePoints = {
-            new Point(-SIZE / 2, -SIZE / 2), // Top-left corner
-            new Point(SIZE / 2, -SIZE / 2),  // Top-right corner
-            new Point(SIZE / 2, SIZE / 2),   // Bottom-right corner
-            new Point(-SIZE / 2, SIZE / 2)    // Bottom-left corner
+            new Point(0, 0),    // Top tip
+            new Point(-BASE_WIDTH / 2, HEIGHT), // Bottom-left corner
+            new Point(BASE_WIDTH / 2, HEIGHT)  // Bottom-right corner
     };
 
+
+
     public PlayerShape() {
-        super(playerShapePoints, new Point(400, 500), 0); 
+        super(playerShapePoints, new Point(400, 500), 90); 
         // Starting position (center bottom of the screen)
     }
-
+    
     public void move() {
         if (forwardPressed) {
-            double deltaX = stepSize * Math.cos(Math.toRadians(rotation));
-            double deltaY = stepSize * Math.sin(Math.toRadians(rotation));
+            double deltaX = stepSize * Math.sin(Math.toRadians(rotation));
+            double deltaY = stepSize * Math.cos(Math.toRadians(rotation));
             position.x += deltaX;
-            position.y += deltaY;
+            position.y -= deltaY; // Subtract deltaY to move upwards towards the top tip
         }
         if (leftPressed) {
             rotation -= 5; // Rotate left by 5 degrees
@@ -38,6 +40,7 @@ class PlayerShape extends Polygon {
             rotation += 5; // Rotate right by 5 degrees
         }
     }
+
 
     public void setForwardPressed(boolean value) {
         forwardPressed = value;
