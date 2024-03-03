@@ -1,17 +1,11 @@
 package game;
 
-/*
-CLASS: ShapeDodger
-DESCRIPTION: Extending Game, YourGameName is all in the paint method.
-NOTE: This class is the metaphorical "main method" of your program,
-      it is your control center.
-
-*/
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 class ShapeDodger extends Game {
-	private PlayerShape player;
+    private PlayerShape player;
     private Obstacle[] obstacles;
     private boolean gameOver = false;
     private ScoreTracker scoreTracker;
@@ -51,36 +45,30 @@ class ShapeDodger extends Game {
             );
         }
 
-        this.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                player.keyPressed(e);
-            }
+        // Add key listener using KeyHandler from PlayerShape class
+        this.addKeyListener(player.new KeyHandler());
 
-            public void keyReleased(KeyEvent e) {
-                player.keyReleased(e);
-            }
-
-            public void keyTyped(KeyEvent e) {
-                player.keyTyped(e);
-            }
-        });
+        // Set focusable and request focus
         this.setFocusable(true);
         this.requestFocus();
     }
 
     public void paint(Graphics brush) {
-        brush.setColor(Color.black);
+        brush.setColor(Color.BLACK);
         brush.fillRect(0, 0, width, height);
         
-        brush.setColor(Color.red);
+        brush.setColor(Color.RED);
         brush.drawString("Deadly Obstacle: INSTANT GAME OVER", 700, 20);
         
-        brush.setColor(Color.green);
+        brush.setColor(Color.GREEN);
         brush.drawString("Poison Obstacle: -5 HEALTH", 700, 35);
 
         if (!gameOver) {
             player.move();
-            for (Obstacle obstacle : obstacles) {
+
+            //Lambda Expression
+            Arrays.stream(obstacles)
+            .forEach(obstacle -> {
                 obstacle.paint(brush);
                 if (player.collides(obstacle)) {
                     if (obstacle.isBig()) {
@@ -92,10 +80,23 @@ class ShapeDodger extends Game {
                         }
                     }
                 }
-            }
+            });
+//            for (Obstacle obstacle : obstacles) {
+//                obstacle.paint(brush);
+//                if (player.collides(obstacle)) {
+//                    if (obstacle.isBig()) {
+//                        gameOver = true; // Game over if player hits a big obstacle
+//                    } else {
+//                        player.reduceHealth(5); // Reduce player's health if hits a small obstacle
+//                        if (player.getHealth() <= 0) {
+//                            gameOver = true; // Game over if player's health reaches 0
+//                        }
+//                    }
+//                }
+//            }
             player.paint(brush);
         } else {
-            brush.setColor(Color.white);
+            brush.setColor(Color.WHITE);
             brush.drawString("Game Over!", 350, 300);
         }
     }
