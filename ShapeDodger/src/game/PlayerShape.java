@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 // Element representing the player-controlled shape
 class PlayerShape extends Polygon {
-	private boolean forwardPressed = false;
+    private boolean forwardPressed = false;
     private boolean leftPressed = false;
     private boolean rightPressed = false;
     private final double stepSize = 5.0;
@@ -20,7 +20,8 @@ class PlayerShape extends Polygon {
     };
 
     public PlayerShape() {
-        super(playerShapePoints, new Point(400, 500), 0); // Starting position (center bottom of the screen)
+        super(playerShapePoints, new Point(400, 500), 0); 
+        // Starting position (center bottom of the screen)
     }
 
     public void move() {
@@ -50,6 +51,28 @@ class PlayerShape extends Polygon {
         rightPressed = value;
     }
 
+    public void reduceHealth(int points) {
+        health -= points;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void paint(Graphics brush) {
+        brush.setColor(Color.BLUE);
+        Point[] points = getPoints();
+        int[] xPoints = new int[points.length];
+        int[] yPoints = new int[points.length];
+        for (int i = 0; i < points.length; i++) {
+            xPoints[i] = (int) points[i].x;
+            yPoints[i] = (int) points[i].y;
+        }
+        brush.fillPolygon(xPoints, yPoints, points.length);
+        brush.setColor(Color.WHITE);
+        brush.drawString("Health: " + health, 10, 20); // Display health counter
+    }
+
     public boolean collides(Polygon other) {
         // We'll implement collision detection logic here
         Point[] points = getPoints();
@@ -60,56 +83,33 @@ class PlayerShape extends Polygon {
         }
         return false;
     }
+    
+    // Inner class for handling key events
+    class KeyHandler extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_UP) {
+                setForwardPressed(true);
+            }
+            if (key == KeyEvent.VK_LEFT) {
+                setLeftPressed(true);
+            }
+            if (key == KeyEvent.VK_RIGHT) {
+                setRightPressed(true);
+            }
+        }
 
-    public void reduceHealth(int points) {
-        health -= points;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void paint(Graphics brush) {
-        brush.setColor(Color.blue);
-        Point[] points = getPoints();
-        int[] xPoints = new int[points.length];
-        int[] yPoints = new int[points.length];
-        for (int i = 0; i < points.length; i++) {
-            xPoints[i] = (int) points[i].x;
-            yPoints[i] = (int) points[i].y;
+        public void keyReleased(KeyEvent e) {
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_UP) {
+                setForwardPressed(false);
+            }
+            if (key == KeyEvent.VK_LEFT) {
+                setLeftPressed(false);
+            }
+            if (key == KeyEvent.VK_RIGHT) {
+                setRightPressed(false);
+            }
         }
-        brush.fillPolygon(xPoints, yPoints, points.length);
-        brush.setColor(Color.white);
-        brush.drawString("Health: " + health, 10, 20); // Display health counter
-    }
-
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if (key == KeyEvent.VK_UP) {
-            setForwardPressed(true);
-        }
-        if (key == KeyEvent.VK_LEFT) {
-            setLeftPressed(true);
-        }
-        if (key == KeyEvent.VK_RIGHT) {
-            setRightPressed(true);
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-        if (key == KeyEvent.VK_UP) {
-            setForwardPressed(false);
-        }
-        if (key == KeyEvent.VK_LEFT) {
-            setLeftPressed(false);
-        }
-        if (key == KeyEvent.VK_RIGHT) {
-            setRightPressed(false);
-        }
-    }
-
-    public void keyTyped(KeyEvent e) {
-        // Not used in this implementation
     }
 }
